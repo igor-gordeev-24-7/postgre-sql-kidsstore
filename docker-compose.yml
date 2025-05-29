@@ -1,0 +1,27 @@
+services:
+
+  postgres-kidsstore:
+    image: postgres:14
+    container_name: kidsstore-postgres
+    environment:
+      POSTGRES_DB: KidsStore
+      POSTGRES_USER: kiduser
+      POSTGRES_PASSWORD: kidspass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: unless-stopped
+
+  adminer:
+    image: adminer
+    container_name: kidsstore-adminer
+    ports:
+      - "8081:8080"
+    restart: unless-stopped
+    depends_on:
+      - postgres-kidsstore
+
+volumes:
+  postgres_data:
